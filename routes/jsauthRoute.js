@@ -7,7 +7,7 @@ const {
 
 
 router.route("/").post(registerJSUser);
-router.route("/").get(loginJSUser);
+router.route("/login").post(loginJSUser);
 
 
 module.exports = router;

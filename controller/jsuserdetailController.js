@@ -1,37 +1,22 @@
 
-var JSUserDetail = require("../model/jsuserdetailModel")
+var JSUserDetail = require("../model/jsuserdetailModel");
+const asyncHandler = require("express-async-handler");
+const ResponseHandler = require("../resource/responseHandler");
 
-const registerJSUserDetail = async (request, response) => {
-    const {firstName ,lastName, city, field, education, experienceType,experienceYears,description} = request.body;
-
-    try {
-       const newJSUserDetail =await JSUserDetail.create({
-        firstName: firstName,
-           lastName: lastName,
-           city: city,
-           field: field,
-           education: education,
-           experienceType: experienceType,
-           experienceYears: experienceYears,
-           description: description
-   });
-
-        response.json({
-        status: "success",
-        newJSUserDetail: newJSUserDetail,
-      });
-        
-    } catch (error) {
-
-         response.json({
-        status: "Failure",
-        message: error.message,
-         });
-        
-    }
-
-  
-}
+const registerJSUserDetail = asyncHandler(async (request, response) => {
+  const { firstName, lastName, city, field, education, experienceType, experienceYears, description } = request.body;
+  const newJSUserDetail = await JSUserDetail.create({
+    firstName: firstName,
+    lastName: lastName,
+    city: city,
+    field: field,
+    education: education,
+    experienceType: experienceType,
+    experienceYears: experienceYears,
+    description: description
+  });
+  ResponseHandler.sendSuccess(response, 200, { newJSUserDetail: newJSUserDetail })
+});
 
 module.exports = {
     registerJSUserDetail
