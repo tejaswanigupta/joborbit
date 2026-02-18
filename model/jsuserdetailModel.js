@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const JSUserdetailSchema = mongoose.Schema(
-    {
+  {
+    uId: {
+            type: String,
+         required: [true, "please add your User Id"],
+        },
         firstName: {
             type: String,
             required: [true, "please add your first Name"],

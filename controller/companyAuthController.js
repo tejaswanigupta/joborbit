@@ -1,44 +1,43 @@
-var JSUser = require("../model/jsauthModel")
+var CompanyAuth = require("../model/companyAuthModel")
 const asyncHandler = require("express-async-handler");
 const ResponseHandler = require("../resource/responseHandler");
 var validator = require('validator');
 const bcrypt = require("bcrypt")
 
-const registerJSUser = asyncHandler(async (request, response) => {
+const registerCompany = asyncHandler(async (request, response) => {
 
     const { email, password } = request.body;
 
     if (!validator.isEmail(email)) {
-        throw new Error("Please enter valid email");
+        throw new Error("Plesae enter a valid email");
     }
 
     if (!validator.isStrongPassword(password)) {
         throw new Error("Please choose a strong password");
     }
-
+   
     const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log("hashed password:", hashedPassword);
-    
-    const newJSUser = await JSUser.create({ email: email, password: hashedPassword });
-    ResponseHandler.sendSuccess(response, 200, { uId: newJSUser.id });
+   
+    const newCompany = await CompanyAuth.create({ email: email, password: hashedPassword });
+    ResponseHandler.sendSuccess(response, 200, { uId: newCompany.id });
 });
 
-const loginJSUser = asyncHandler(async (request, response) => {
+const loginCompanyUser = asyncHandler(async (request, response) => {
     const { email, password } = request.body;
 
     if (!validator.isEmail(email)) {
         throw new Error("Please enter valid email");
     }
 
-    if (!validator.isLength(password,{min:8,max:15})) {
+    if (!validator.isLength(password,{min:8,max:30})) {
         throw new Error("Please enter valid password");
     }
 
 
-    const jsUserLogin = await JSUser.findOne({ email: email })
+    const companyUserLogin = await CompanyAuth.findOne({ email: email })
     
-    if (jsUserLogin && (await bcrypt.compare(password,jsUserLogin.password))) {
-     ResponseHandler.sendSuccess(response, 200, { uId: jsUserLogin.id });   
+    if (companyUserLogin && (await bcrypt.compare(password,companyUserLogin.password))) {
+     ResponseHandler.sendSuccess(response, 200, { companyId: companyUserLogin.id });   
     }
     else {
         ResponseHandler.sendFailure(response, 401, { result: "User not found" });
@@ -47,5 +46,5 @@ const loginJSUser = asyncHandler(async (request, response) => {
 });
 
 module.exports = {
-    registerJSUser,loginJSUser
+    registerCompany,loginCompanyUser
 }
